@@ -1,0 +1,38 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/${DB_NAME:ecocoleta}
+    username: ${DB_USER:ecocoleta}
+    password: ${DB_PASS:ecocoleta}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: 5672
+    username: ${RABBITMQ_USER:guest}
+    password: ${RABBITMQ_PASS:guest}
+
+server:
+  port: 8080
+
+ecocoleta:
+  jwt:
+    secret: ${JWT_SECRET:dev-secret-mude-em-producao-32chars}
+    expiration-ms: 86400000
+
+rabbitmq:
+  exchange: ecocoleta.exchange
+  queue:
+    status: ecocoleta.status.queue
+  routing-key:
+    status: status.atualizado
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html

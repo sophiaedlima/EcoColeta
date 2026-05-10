@@ -1,0 +1,43 @@
+services:
+  postgres-test:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: ecocoleta_test
+      POSTGRES_USER: ecocoleta
+      POSTGRES_PASSWORD: ecocoleta
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ecocoleta"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  rabbitmq-test:
+    image: rabbitmq:3-alpine
+    ports:
+      - "5673:5672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  backend-test:
+    build: ./backend
+    command: ["./gradlew", "test"]
+    environment:
+      DB_HOST: postgres-test
+      DB_NAME: ecocoleta_test
+      DB_USER: ecocoleta
+      DB_PASS: ecocoleta
+      RABBITMQ_HOST: rabbitmq-test
+      JWT_SECRET: test-secret-32-chars-ok-aqui
+      SPRING_PROFILES_ACTIVE: test
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+      rabbitmq-test:
+        condition: service_healthy
+    volumes:
+      - ./backend/build/reports:/app/build/reports

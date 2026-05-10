@@ -1,0 +1,22 @@
+# Build outputs
+backend/build/
+backend/bin/
+backend/.gradle/
+worker/build/
+worker/bin/
+worker/.gradle/
+frontend/dist/
+frontend/node_modules/
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Env
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
