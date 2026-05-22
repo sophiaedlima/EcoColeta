@@ -37,6 +37,7 @@ services:
       DB_PASS: ecocoleta
       RABBITMQ_HOST: rabbitmq
       JWT_SECRET: mude-essa-chave-em-producao-32chars
+      TZ: America/Sao_Paulo
     depends_on:
       postgres:
         condition: service_healthy
@@ -49,6 +50,7 @@ services:
       - "8081:8081"
     environment:
       RABBITMQ_HOST: rabbitmq
+      TZ: America/Sao_Paulo
     depends_on:
       rabbitmq:
         condition: service_healthy

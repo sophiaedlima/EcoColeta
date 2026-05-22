@@ -12,6 +12,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -39,7 +40,7 @@ public class SolicitacaoController {
     @Operation(summary = "Cria uma nova solicitação de coleta")
     @PostMapping
     public ResponseEntity<Solicitacao> criar(@Valid @RequestBody NovaSolicitacaoRequest req) {
-        var solicitacao = criarUseCase.executar(req.email(), req.endereco());
+        var solicitacao = criarUseCase.executar(req.email(), req.endereco(), req.materiais(), req.observacoes(), req.imagens(), req.dataPreferida(), req.horarioPreferido());
         return ResponseEntity.status(HttpStatus.CREATED).body(solicitacao);
     }
 
@@ -47,6 +48,13 @@ public class SolicitacaoController {
     @GetMapping
     public ResponseEntity<List<Solicitacao>> listar() {
         return ResponseEntity.ok(listarUseCase.executar());
+    }
+
+    @Operation(summary = "Lista todas as solicitações (Admin)")
+    @GetMapping("/admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Solicitacao>> listarTodas() {
+        return ResponseEntity.ok(listarUseCase.executarTodas());
     }
 
     @Operation(summary = "Busca uma solicitação pelo ID")
@@ -59,6 +67,11 @@ public class SolicitacaoController {
 
     public record NovaSolicitacaoRequest(
             @Email @NotBlank String email,
-            @NotBlank String endereco
+            @NotBlank String endereco,
+            String materiais,
+            String observacoes,
+            String imagens,
+            String dataPreferida,
+            String horarioPreferido
     ) {}
 }

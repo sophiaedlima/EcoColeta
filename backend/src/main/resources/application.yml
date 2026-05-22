@@ -1,4 +1,8 @@
 spring:
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    time-zone: America/Sao_Paulo
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:5432/${DB_NAME:ecocoleta}
     username: ${DB_USER:ecocoleta}

@@ -15,10 +15,15 @@ public class CriarSolicitacaoUseCase {
     }
 
     @Transactional
-    public Solicitacao executar(String email, String endereco) {
+    public Solicitacao executar(String email, String endereco, String materiais, String observacoes, String imagens, String dataPreferida, String horarioPreferido) {
         var solicitacao = new Solicitacao();
         solicitacao.setSolicitanteEmail(email);
         solicitacao.setEndereco(endereco);
+        solicitacao.setMateriais(materiais);
+        solicitacao.setObservacoes(observacoes);
+        solicitacao.setImagens(imagens);
+        solicitacao.setDataPreferida(dataPreferida);
+        solicitacao.setHorarioPreferido(horarioPreferido);
         return repository.save(solicitacao);
     }
 }

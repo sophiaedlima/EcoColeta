@@ -30,7 +30,7 @@ class CriarSolicitacaoUseCaseTest {
         esperado.setEndereco("Rua A, 123");
         when(repository.save(any())).thenReturn(esperado);
 
-        var resultado = useCase.executar("user@teste.com", "Rua A, 123");
+        var resultado = useCase.executar("user@teste.com", "Rua A, 123", "[\"papelao\"]", "obs", null, "2026-05-22", "08h–10h");
 
         assertThat(resultado.getStatus()).isEqualTo(StatusColeta.PENDENTE);
         assertThat(resultado.getSolicitanteEmail()).isEqualTo("user@teste.com");
