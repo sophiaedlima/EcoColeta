@@ -1,4 +1,4 @@
-# EcoColeta ♻️
+# EcoColeta 
 
 Plataforma web para solicitação, agendamento e rastreamento de coletas de materiais recicláveis.
 
