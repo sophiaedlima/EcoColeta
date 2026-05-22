@@ -437,6 +437,6 @@ Documentação completa: **http://localhost:8082/swagger-ui/index.html**
 
 | Nome | Responsabilidade |
 |---|---|
-| [Nome 1] | Frontend (React) + Design |
-| [Nome 2] | Backend (API REST + DDD + Auth JWT) |
-| [Nome 3] | Mensageria (RabbitMQ + Worker + WebSocket) |
+| Gabriel Brito Falcão | Frontend (React) + Design |
+| Hemily B. de Jesus Ramos | Backend (API REST + DDD + Auth JWT) |
+| Sophia Eduarda Lima | Mensageria (RabbitMQ + Worker + WebSocket) |
