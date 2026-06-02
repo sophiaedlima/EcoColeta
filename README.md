@@ -495,8 +495,8 @@ useEffect(() => {
 
 ## Integrantes
 
-| Nome | Responsabilidade |
+| Nome |
 |---|---|
-| Gabriel Brito Falcão | Frontend (React) + Design |
-| Hemily B. de Jesus Ramos | Backend (API REST + DDD + Auth JWT) |
-| Sophia Eduarda Lima | Mensageria (RabbitMQ + Worker + WebSocket) |
+| Gabriel Brito Falcão |
+| Hemily B. de Jesus Ramos |
+| Sophia Eduarda Lima |
