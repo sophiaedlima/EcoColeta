@@ -494,9 +494,6 @@ useEffect(() => {
 ---
 
 ## Integrantes
-
-| Nome |
-|---|---|
 | Gabriel Brito Falcão |
 | Hemily B. de Jesus Ramos |
 | Sophia Eduarda Lima |
