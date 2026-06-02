@@ -2,7 +2,7 @@
 
 Plataforma web para solicitação, agendamento e rastreamento de coletas de materiais recicláveis.
 
-> Projeto Integrador de Módulo — ADS 4º Período · PUC Goiás · 2026/1
+> Projeto Integrador de Módulo - ADS 4º Período · PUC Goiás · 2026/1
 
 ---
 
@@ -24,12 +24,12 @@ Plataforma web para solicitação, agendamento e rastreamento de coletas de mate
 | Rota | Tela | Acesso |
 |---|---|---|
 | `/login` | Login | Público |
-| `/` | Home — lista de solicitações | Usuário |
+| `/` | Home - lista de solicitações | Usuário |
 | `/nova` | Nova solicitação de coleta | Usuário |
-| `/rastrear` | Rastrear — acompanhar status das coletas | Usuário |
+| `/rastrear` | Rastrear - acompanhar status das coletas | Usuário |
 | `/acompanhamento/:id` | Detalhe da coleta com timeline | Usuário |
 | `/perfil` | Perfil do usuário e estatísticas | Usuário |
-| `/admin` | Painel admin — gerenciar e agendar coletas | Admin |
+| `/admin` | Painel admin - gerenciar e agendar coletas | Admin |
 
 ---
 
@@ -421,6 +421,66 @@ docker compose down -v
 ```
 
 Documentação completa: **http://localhost:8082/swagger-ui/index.html**
+
+---
+
+## Alterações Técnicas Aplicadas
+
+### Correção de fuso horário nos timestamps
+
+**Arquivos alterados:**
+- `backend/src/main/java/com/ecocoleta/domain/Solicitacao.java`
+- `backend/src/main/resources/application.yml`
+
+**Problema:** Os campos `criadoEm` e `atualizadoEm` eram gravados com `LocalDateTime.now()`, que usa o fuso do servidor (UTC), resultando em timestamps incorretos no banco e na API (sufixo `Z` no JSON).
+
+**Correção em `Solicitacao.java`:** os dois pontos de geração de data passaram a usar fuso explícito:
+
+```java
+import java.time.ZoneId;
+
+private LocalDateTime criadoEm = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
+
+@PreUpdate
+void preUpdate() {
+    this.atualizadoEm = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
+}
+```
+
+**Correção em `application.yml`:** configuração do Jackson para serializar datas sem o sufixo UTC e com fuso de Brasília:
+
+```yaml
+spring:
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    time-zone: America/Sao_Paulo
+```
+
+> O `docker-compose.yml` já continha `TZ: America/Sao_Paulo` em todos os serviços. A correção completa exige as três camadas: variável de ambiente do container, fuso explícito no Java e configuração do serializador JSON.
+
+---
+
+### Atualização automática da lista de solicitações
+
+**Arquivo alterado:** `frontend/src/pages/Home.jsx`
+
+**Problema:** A lista de solicitações era carregada apenas na montagem do componente (`useEffect` com array vazio). Ao navegar para o painel admin, confirmar um agendamento e voltar para a Home, o status ainda aparecia como `PENDENTE` porque os dados não eram recarregados.
+
+**Correção:** adicionado listener no evento `focus` da janela para recarregar os dados sempre que o usuário retorna à aba:
+
+```javascript
+useEffect(() => {
+  function carregar() {
+    solicitacoesService.listar()
+      .then(({ data }) => setSolicitacoes(data))
+      .catch(() => {});
+  }
+  carregar();
+  window.addEventListener('focus', carregar);
+  return () => window.removeEventListener('focus', carregar);
+}, []);
+```
 
 ---
 
